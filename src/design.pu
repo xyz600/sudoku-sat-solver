@@ -1,0 +1,85 @@
+@startuml
+
+class CNF 
+{
+    vars: Vec<ExpressionOr>
+    validate()
+}
+
+CNF *-- ExpressionAnd
+
+enum State
+{
+    Integer,
+    Or,
+    And,
+}
+
+interface Expression 
+{
+    state: State(),
+    children: Option<Iterator<Expression>>
+}
+
+Expression *-- State
+
+class ExpressionInteger 
+{
+    // 負なら not
+    vars: i64
+}
+
+Expression <-- ExpressionInteger
+
+class ExpressionOr 
+{
+    vars: Vec<Expression>
+}
+
+Expression <-- ExpressionOr
+ExpressionOr *-- Expression
+
+class ExpressionAnd 
+{
+    vars: Vec<Expression>
+}
+
+Expression <-- ExpressionAnd
+ExpressionAnd *-- Expression
+
+class VariableInteger
+{
+    vars: Vec<i64>
+    Expression Equal(&self, var: &VariableInteger);
+    Expression NotEqual(&self, var: &VariableInteger);
+    eval(&self, cnf: &CMF);
+}
+
+class VariableIntegerGenerator 
+{
+    VariableInteger create()
+}
+
+VariableIntegerGenerator *-- VariableInteger
+
+class SudokuEncoder
+{
+    vargen: VariableIntegerGenerator
+    table: Vec<Vec<VariableInteger>>
+    cnf: CNF
+}
+
+SudokuEncoder *-- VariableIntegerGenerator
+SudokuEncoder *-- CNF
+
+class SudokuDecoder
+{
+    vargen: VariableIntegerGenerator
+    cnf: CNF
+    result: Vec<bool>
+}
+
+SudokuDecoder *-- VariableIntegerGenerator
+SudokuDecoder *-- CNF
+
+@enduml
