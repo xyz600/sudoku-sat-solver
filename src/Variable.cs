@@ -22,6 +22,22 @@ namespace sudoku_sat_solver {
             throw new Exception ("no value evaluated");
         }
 
+        public IExpression AssignAny () {
+            var ret = new ExpressionOr ();
+            for (int i = 0; i < variables.Count; i++) {
+                var item = new ExpressionAnd ();
+                for (int j = 0; j < variables.Count; j++) {
+                    if (i == j) {
+                        item.children.Add (new ExpressionInteger (variables[j], true));
+                    } else {
+                        item.children.Add (new ExpressionInteger (variables[j], false));
+                    }
+                }
+                ret.children.Add (item);
+            }
+            return ret;
+        }
+
         // this == var が成立するような expression を返す
         // (this == 1 && var == 1) || (this == 2 && var == 2) || ...
         public IExpression EqualCondition (VariableInteger var) {

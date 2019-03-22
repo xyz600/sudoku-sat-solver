@@ -47,6 +47,13 @@ namespace sudoku_sat_solver {
                 }
             }
 
+            // どれかの値は割り当てられる
+            for (int col = 0; col < size; col++) {
+                for (int row = 0; row < size; row++) {
+                    ret.children.Add (vars[col][row].AssignAny ());
+                }
+            }
+
             // 縦が全て異なる値
             for (int col = 0; col < size; col++) {
                 var lst = new List<VariableInteger> ();
