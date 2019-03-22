@@ -1,11 +1,46 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using sudoku_sat_solver;
 using Xunit;
 
 namespace test {
 
+    public class UnitTestEncoder {
+        void CheckType<T> (IExpression exp) {
+            Assert.Equal (typeof (T), exp.GetType ());
+        }
+
+        [Fact]
+        void TestEncodeCNF () {
+            int size = 4;
+            var encoder = new SudokuEncoder (size);
+            var board = new List<List<Int32>> ();
+
+            for (int i = 0; i < size; i++) {
+                var row = new List<Int32> ();
+                for (int j = 0; j < size; j++) {
+                    row.Add (0);
+                }
+                board.Add (row);
+            }
+            var result = encoder.encode (board);
+            foreach (var child in result.children) {
+                if (typeof (ExpressionOr) == child.GetType ()) {
+                    foreach (var child2 in child.children) {
+                        CheckType<ExpressionInteger> (child2);
+                    }
+                } else if (typeof (ExpressionAnd) == child.GetType ()) {
+                    Assert.True (false);
+                }
+            }
+        }
+    }
+
     public class UnitTestVariable {
+        void CheckType<T> (IExpression exp) {
+            Assert.Equal (typeof (T), exp.GetType ());
+        }
 
         [Fact]
         public void TestInteger () {
@@ -14,6 +49,30 @@ namespace test {
             var i2 = gen.GenerateInt (1, 3);
             var i3 = gen.GenerateId ();
             Assert.Equal (6, i3);
+        }
+
+        [Fact]
+        public void TestIntegerEqual () {
+            var gen = new VariableGenerator ();
+            var i1 = gen.GenerateInt (1, 9);
+            var i2 = gen.GenerateInt (1, 9);
+            var expr = i1.EqualCondition (i2);
+            Assert.Equal (9, expr.children.Count);
+            CheckType<ExpressionOr> (expr);
+
+            foreach (var child in expr.children) {
+                Assert.Equal (18, child.children.Count);
+                CheckType<ExpressionAnd> (child);
+                int count = 0;
+                foreach (var child2 in child.children) {
+                    CheckType<ExpressionInteger> (child2);
+                    var ins = (ExpressionInteger) child2;
+                    if (ins.negative) {
+                        count++;
+                    }
+                }
+                Assert.Equal (2, count);
+            }
         }
     }
 

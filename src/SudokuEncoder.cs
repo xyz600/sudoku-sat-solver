@@ -6,9 +6,9 @@ namespace sudoku_sat_solver {
 
     public class SudokuEncoder {
 
-        public SudokuEncoder () {
+        public SudokuEncoder (Int32 size) {
             generator = new VariableGenerator ();
-            size = 9;
+            this.size = size;
             vars = new List<List<VariableInteger>> ();
             for (int i = 0; i < size; i++) {
                 vars.Add (new List<VariableInteger> ());
@@ -30,7 +30,7 @@ namespace sudoku_sat_solver {
             return expr;
         }
 
-        public IExpression encode (List<List<Int32>> board) {
+        public ExpressionAnd encode (List<List<Int32>> board) {
             Debug.Assert (board.Count == size);
             foreach (var line in board) {
                 Debug.Assert (line.Count == size);
