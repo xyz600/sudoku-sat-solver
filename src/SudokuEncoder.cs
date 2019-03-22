@@ -13,7 +13,7 @@ namespace sudoku_sat_solver {
             for (int i = 0; i < size; i++) {
                 vars.Add (new List<VariableInteger> ());
                 for (int j = 0; j < size; j++) {
-                    vars[i].Add (generator.GenerateInt (1, 9));
+                    vars[i].Add (generator.GenerateInt (1, size));
                 }
             }
         }
@@ -80,10 +80,16 @@ namespace sudoku_sat_solver {
                     ret.children.Add (DifferentAll (lst));
                 }
             }
+
             var ret2 = new ExpressionAnd ();
-            var simple = TseitinTranslate (ret.Flatten (), ret2);
-            foreach (var expr in simple.children) {
-                ret2.children.Add (expr);
+            // 一番浅い部分は省略する必要がないので、いらない
+            foreach (var child in ret.Flatten ().children) {
+                if (child.GetType () == typeof (ExpressionInteger)) {
+                    ret2.children.Add (child);
+                } else {
+                    var simpleChild = TseitinTranslate (child, ret2);
+                    ret2.children.Add (simpleChild);
+                }
             }
             return ret2;
         }
@@ -118,6 +124,12 @@ namespace sudoku_sat_solver {
                 }
             }
             return ret;
+        }
+
+        public Int32 VariableCount {
+            get {
+                return generator.VariableCount;
+            }
         }
 
         private VariableGenerator generator;

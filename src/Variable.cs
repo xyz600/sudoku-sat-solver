@@ -33,11 +33,11 @@ namespace sudoku_sat_solver {
                 var item = new ExpressionAnd ();
                 for (int j = 0; j < variables.Count; j++) {
                     if (i == j) {
-                        item.children.Add (new ExpressionInteger (variables[i], true));
-                        item.children.Add (new ExpressionInteger (var.variables[i], true));
+                        item.children.Add (new ExpressionInteger (variables[j], true));
+                        item.children.Add (new ExpressionInteger (var.variables[j], true));
                     } else {
-                        item.children.Add (new ExpressionInteger (variables[i], false));
-                        item.children.Add (new ExpressionInteger (var.variables[i], false));
+                        item.children.Add (new ExpressionInteger (variables[j], false));
+                        item.children.Add (new ExpressionInteger (var.variables[j], false));
                     }
                 }
                 ret.children.Add (item);
@@ -76,7 +76,7 @@ namespace sudoku_sat_solver {
     public class VariableGenerator {
 
         public VariableGenerator () {
-            baseId = 0;
+            baseId = 1;
         }
 
         public VariableInteger GenerateInt (Int32 lowerbound, Int32 upperbound) {
@@ -87,6 +87,12 @@ namespace sudoku_sat_solver {
             }
             var ret = new VariableInteger (lowerbound, ids, baseId);
             return ret;
+        }
+
+        public Int32 VariableCount {
+            get {
+                return baseId;
+            }
         }
 
         public Int32 GenerateId () {
