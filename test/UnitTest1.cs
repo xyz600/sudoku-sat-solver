@@ -5,6 +5,18 @@ using Xunit;
 
 namespace test {
 
+    public class UnitTestVariable {
+
+        [Fact]
+        public void TestInteger () {
+            var gen = new VariableGenerator ();
+            var i1 = gen.GenerateInt (1, 3);
+            var i2 = gen.GenerateInt (1, 3);
+            var i3 = gen.GenerateId ();
+            Assert.Equal (6, i3);
+        }
+    }
+
     public class UnitTestExpression {
 
         public ExpressionAnd GenerateTestAnd () {
@@ -120,8 +132,11 @@ namespace test {
         public void TestEmpty () {
             var expOr = new ExpressionOr ();
             var emptyOr = expOr.Empty ();
-            Assert.Equal (typeof (ExpressionOr), emptyOr.GetType ());
+            CheckType<ExpressionOr> (emptyOr);
 
+            var expAnd = new ExpressionAnd ();
+            var emptyAnd = expAnd.Empty ();
+            CheckType<ExpressionAnd> (emptyAnd);
         }
     }
 

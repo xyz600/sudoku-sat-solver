@@ -85,19 +85,16 @@ namespace sudoku_sat_solver {
                 ids.Add (baseId);
                 baseId++;
             }
-            var ret = new VariableInteger (lowerbound, ids, maxId);
-            maxId++;
+            var ret = new VariableInteger (lowerbound, ids, baseId);
             return ret;
         }
 
         public Int32 GenerateId () {
-            var result = maxId;
-            maxId++;
+            var result = baseId;
+            baseId++;
             return result;
         }
 
         private Int32 baseId;
-
-        private Int32 maxId;
     }
 }
