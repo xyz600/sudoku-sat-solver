@@ -3,6 +3,7 @@
 namespace sudoku_sat_solver {
     class Program {
 
+        // 作った CNF を出力する
         static void Dump (Int32 varCount, ExpressionAnd CNF) {
             var cnfSize = CNF.children.Count;
             Console.Error.WriteLine ($"p cnf {varCount} {cnfSize}");

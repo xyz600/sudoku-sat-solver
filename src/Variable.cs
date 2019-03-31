@@ -12,16 +12,18 @@ namespace sudoku_sat_solver {
             this.id = id;
         }
 
-        public Int64 Evaluate (List<bool> values) {
+        // one-hot encode された整数を decode する 
+        public Int64 Decode (List<bool> values) {
             for (int i = 0; i < variables.Count; i++) {
-                var expr = variables[i];
-                if (values[expr]) {
+                // i番目の bool 変数が true なら、その変数は (i+1) である
+                if (values[variables[i]]) {
                     return lowerbound + i;
                 }
             }
-            throw new Exception ("no value evaluated");
+            throw new Exception ("no value to decode");
         }
 
+        // 値域の中のどれか一つは取れるという制約を出力
         public IExpression AssignAny () {
             var ret = new ExpressionOr ();
             for (int i = 0; i < variables.Count; i++) {
@@ -66,6 +68,7 @@ namespace sudoku_sat_solver {
             return EqualCondition (var).Negate ();
         }
 
+        // 変数が var という値を取る制約
         public IExpression EqualCondition (Int32 var) {
             Debug.Assert (lowerbound <= var && var < lowerbound + variables.Count);
 
@@ -90,6 +93,8 @@ namespace sudoku_sat_solver {
         public Int32 id;
     }
 
+    // 整数を表現する bool 変数集合
+    // 制約式を生成できる
     public class VariableGenerator {
 
         public VariableGenerator () {

@@ -11,8 +11,10 @@ namespace sudoku_sat_solver {
         // 否定を内部に伝播させる
         public abstract IExpression Negate ();
 
+        // And(And(...)) みたいなものを、And(...) に変換
         public abstract IExpression Flatten ();
 
+        // 自分と同じ型の空オブジェクトを作る(何も入ってない Or / And)
         public abstract IExpression Empty ();
     }
 
@@ -117,7 +119,7 @@ namespace sudoku_sat_solver {
             return expr;
         }
 
-            public override IExpression Flatten () {
+        public override IExpression Flatten () {
             var ret = new ExpressionAnd ();
             foreach (var child in children) {
                 var flatten = child.Flatten ();

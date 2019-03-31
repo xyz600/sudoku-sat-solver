@@ -21,6 +21,7 @@ namespace sudoku_sat_solver {
             }
         }
 
+        // variables の中の変数は全て異なる
         private IExpression DifferentAll (List<VariableInteger> variables) {
             var expr = new ExpressionAnd ();
             foreach (var v1 in variables) {
@@ -39,10 +40,10 @@ namespace sudoku_sat_solver {
                 Debug.Assert (line.Count == size);
             }
 
-            // 最後の CNF
+            // 最終的に生成される CNF
             var ret = new ExpressionAnd ();
 
-            // 初期配置
+            // 最初から埋まってる数字の初期配置
             for (int col = 0; col < size; col++) {
                 for (int row = 0; row < size; row++) {
                     if (board[col][row] > 0) {
@@ -51,7 +52,7 @@ namespace sudoku_sat_solver {
                 }
             }
 
-            // どれかの値は割り当てられる
+            // 1〜9 のどれかの値は割り当てられる
             for (int col = 0; col < size; col++) {
                 for (int row = 0; row < size; row++) {
                     ret.children.Add (vars[col][row].AssignAny ());
@@ -97,7 +98,7 @@ namespace sudoku_sat_solver {
             foreach (var child in ret.Flatten ().children) {
                 if (child.GetType () == typeof (ExpressionInteger)) {
                     ret2.children.Add (child);
-                } else {
+                } else { // if ExpressionOr
                     var simpleChild = TseitinTranslate (child, ret2);
                     ret2.children.Add (simpleChild);
                 }
@@ -106,13 +107,15 @@ namespace sudoku_sat_solver {
         }
 
         // expr を簡約した結果を返す
-        // 新規変数を追加する時に生じた制約は、result に入れる
+        // 新規変数を追加する時に生じた制約は、 newExpr に入れる
         public IExpression TseitinTranslate (IExpression expr, ExpressionAnd newExpr) {
             var ret = expr.Empty ();
             foreach (var child in expr.children) {
+                // 簡約の必要がない
                 if (child.GetType () == typeof (ExpressionInteger)) {
                     ret.children.Add (child);
                 } else {
+                    // 再帰的に簡約
                     var childExpr = TseitinTranslate (child, newExpr);
 
                     // childExpr を newId の変数で置き換え
