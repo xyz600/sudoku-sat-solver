@@ -9,10 +9,13 @@ namespace sudoku_sat_solver {
         public SudokuEncoder (Int32 size) {
             generator = new VariableGenerator ();
             this.size = size;
+
+            // 数独の size x size 盤面
             vars = new List<List<VariableInteger>> ();
             for (int i = 0; i < size; i++) {
                 vars.Add (new List<VariableInteger> ());
                 for (int j = 0; j < size; j++) {
+                    // 値域が 1 - size の Integer
                     vars[i].Add (generator.GenerateInt (1, size));
                 }
             }
@@ -36,6 +39,7 @@ namespace sudoku_sat_solver {
                 Debug.Assert (line.Count == size);
             }
 
+            // 最後の CNF
             var ret = new ExpressionAnd ();
 
             // 初期配置

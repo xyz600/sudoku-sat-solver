@@ -18,14 +18,14 @@ namespace sudoku_sat_solver {
 
     public class ExpressionInteger : IExpression {
 
-        public ExpressionInteger (Int32 id, bool negative) {
+        public ExpressionInteger (Int32 id, bool positive) {
             this.id = id;
-            this.negative = negative;
+            this.positive = positive;
         }
 
         public ExpressionInteger (ExpressionInteger src) {
             this.id = src.id;
-            this.negative = src.negative;
+            this.positive = src.positive;
         }
 
         public ExpressionInteger Clone () {
@@ -40,7 +40,7 @@ namespace sudoku_sat_solver {
 
         public override IExpression Negate () {
             var ret = Clone ();
-            ret.negative = !ret.negative;
+            ret.positive = !ret.positive;
             return ret;
         }
 
@@ -53,7 +53,7 @@ namespace sudoku_sat_solver {
         }
 
         public Int32 id;
-        public bool negative;
+        public bool positive;
     }
 
     public class ExpressionOr : IExpression {
@@ -117,8 +117,8 @@ namespace sudoku_sat_solver {
             return expr;
         }
 
-        public override IExpression Flatten () {
-            var ret = new ExpressionOr ();
+            public override IExpression Flatten () {
+            var ret = new ExpressionAnd ();
             foreach (var child in children) {
                 var flatten = child.Flatten ();
                 if (GetType () == child.GetType ()) {

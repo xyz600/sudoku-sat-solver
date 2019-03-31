@@ -67,7 +67,7 @@ namespace test {
                 foreach (var child2 in child.children) {
                     CheckType<ExpressionInteger> (child2);
                     var ins = (ExpressionInteger) child2;
-                    if (ins.negative) {
+                    if (ins.positive) {
                         count++;
                     }
                 }
@@ -132,7 +132,7 @@ namespace test {
         public void TestExpressionInteger () {
             var expr = new ExpressionInteger (0, true);
             Assert.True (expr.id == 0);
-            Assert.True (expr.negative);
+            Assert.True (expr.positive);
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace test {
                 foreach (var child2 in child.children) {
                     CheckType<ExpressionInteger> (child2);
                     var subexpr = (ExpressionInteger) child2;
-                    Assert.Equal (expected[index], subexpr.negative);
+                    Assert.Equal (expected[index], subexpr.positive);
                     Assert.Equal (index, subexpr.id);
                     index++;
                 }

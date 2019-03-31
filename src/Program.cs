@@ -9,12 +9,12 @@ namespace sudoku_sat_solver {
             foreach (var child in CNF.children) {
                 if (typeof (ExpressionInteger) == child.GetType ()) {
                     var itemInt = (ExpressionInteger) child;
-                    var val = itemInt.negative ? itemInt.id : -itemInt.id;
+                    var val = itemInt.positive ? itemInt.id : -itemInt.id;
                     Console.Error.WriteLine ($"{val} 0");
                 } else if (typeof (ExpressionOr) == child.GetType ()) {
                     foreach (var item in child.children) {
                         var itemInt = (ExpressionInteger) item;
-                        var val = itemInt.negative ? itemInt.id : -itemInt.id;
+                        var val = itemInt.positive ? itemInt.id : -itemInt.id;
                         Console.Error.Write ($"{val} ");
                     }
                     Console.Error.WriteLine (0);

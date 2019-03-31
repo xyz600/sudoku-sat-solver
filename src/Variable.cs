@@ -26,6 +26,7 @@ namespace sudoku_sat_solver {
             var ret = new ExpressionOr ();
             for (int i = 0; i < variables.Count; i++) {
                 var item = new ExpressionAnd ();
+                // 下から i 番目の値が採用されるような割当て
                 for (int j = 0; j < variables.Count; j++) {
                     if (i == j) {
                         item.children.Add (new ExpressionInteger (variables[j], true));
